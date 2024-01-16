@@ -36,11 +36,11 @@ public class BankAccount {
         }
         int max =9;
         for(int i=0;i<digits; i++){
-            number.append(max);
-            sum -= max;
             if(sum<=9){
                 max = sum;
             }
+            number.append(max);
+            sum -= max;
         }
         return number.toString();
     }
