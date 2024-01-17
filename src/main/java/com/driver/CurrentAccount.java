@@ -7,6 +7,10 @@ public class CurrentAccount extends BankAccount{
         return tradeLicenseId;
     }
 
+    public void setTradeLicenseId(String tradeLicenseId) {
+        this.tradeLicenseId = tradeLicenseId;
+    }
+
     public CurrentAccount(String name, double balance, String tradeLicenseId) throws Exception {
         // minimum balance is 5000 by default. If balance is less than 5000, throw "Insufficient Balance" exception
         super(name, balance, 5000);
@@ -19,16 +23,41 @@ public class CurrentAccount extends BankAccount{
         // If the license Id is valid, do nothing
         // If the characters of the license Id can be rearranged to create any valid license Id
         // If it is not possible, throw "Valid License can not be generated" Exception
+        int len = tradeLicenseId.length();
         int[] arr = new int[26];
-        int size = tradeLicenseId.length();
-        for(int i=0; i< size; i++){
+        for(int i=0;i<len;i++){
             char c = tradeLicenseId.charAt(i);
             arr[c-65]++;
         }
-        for(int a: arr){
-            if(size%2 ==0 && a > size/2) throw new Exception("Valid License can not be generated");
-            else if(size%2 !=0 && a > size/2 + 1) throw new Exception("Valid License can not be generated");
+        // System.out.print(Arrays.toString(arr));
+        int maxOccurIndex = 0;
+        int maxOccurValue=0;
+        for(int i=0;i<26;i++){
+            if(arr[i]>maxOccurValue){
+                maxOccurValue = arr[i];
+                maxOccurIndex = i;
+            }
         }
+        if(len%2 ==0 && maxOccurValue > len/2) throw new Exception("Valid License can not be generated");
+        if(len%2 !=0 && maxOccurValue > (len+1)/2) throw new Exception("Valid License can not be generated");
+
+        char[] res = new char[len];
+        int index = 0;
+        while(arr[maxOccurIndex]-- > 0){
+            res[index] = (char) (maxOccurIndex + 65);
+            index+=2;
+        }
+        // System.out.println(arr[maxOccurIndex]);
+        for(int i=0;i<26;i++){
+            if(arr[i]<=0) continue;
+            while(arr[i]-- > 0){
+                if(index > len-1) index =1;
+                res[index] = (char) (i+65);
+                index +=2;
+            }
+        }
+        setTradeLicenseId(String.valueOf(res));
+//        System.out.println(String.valueOf(res));
     }
 
 }
